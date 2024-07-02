@@ -23,6 +23,9 @@ class Ingredient
     #[ORM\JoinColumn(nullable: false)]
     private ?Recipe $recipe = null;
 
+    #[ORM\OneToOne(mappedBy: 'ingredient', cascade: ['persist', 'remove'])]
+    private ?Picture $picture = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -60,6 +63,28 @@ class Ingredient
     public function setRecipe(?Recipe $recipe): static
     {
         $this->recipe = $recipe;
+
+        return $this;
+    }
+
+    public function getPicture(): ?Picture
+    {
+        return $this->picture;
+    }
+
+    public function setPicture(?Picture $picture): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($picture === null && $this->picture !== null) {
+            $this->picture->setIngredient(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($picture !== null && $picture->getIngredient() !== $this) {
+            $picture->setIngredient($this);
+        }
+
+        $this->picture = $picture;
 
         return $this;
     }

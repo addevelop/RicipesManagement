@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Recipe{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="mb-4">Recette</h1>
+
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ recipe.id }}</td>
+            </tr>
+            <tr>
+                <th>Titre</th>
+                <td>{{ recipe.title }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ recipe.description }}</td>
+            </tr>
+            <tr>
+                <th>Views</th>
+                <td>{{ recipe.views }}</td>
+            </tr>
+            <tr>
+                <th>images</th>
+                <td>
+                {% set pictures = recipe.pictures %}
+                {% for picture in pictures %}
+                    <img src="{{ asset('assets/uploads/recipes/' ~ picture.path) }}">
+                {% endfor %}
+                </td>
+            </tr>
+            <tr>
+                <th>Crée</th>
+                <td>{{ recipe.createdAt ? recipe.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Modifié</th>
+                <td>{{ recipe.updatedAt ? recipe.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="mt-4">
+        <a href="{{ path('app_recipe_index') }}" class="btn btn-secondary">retour a la liste</a>
+        {% if recipe.author.id == app.user.id %}
+        <a href="{{ path('app_recipe_edit', {'id': recipe.id}) }}" class="btn btn-primary">Modifié</a>
+        {{ include('recipe/_delete_form.html.twig') }}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

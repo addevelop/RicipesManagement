@@ -37,7 +37,7 @@ class Recipe
     /**
      * @var Collection<int, Ingredient>
      */
-    #[ORM\OneToMany(targetEntity: Ingredient::class, mappedBy: 'recipe')]
+    #[ORM\OneToMany(targetEntity: Ingredient::class, mappedBy: 'recipe', cascade: ['persist'])]
     private Collection $ingredients;
 
     /**
@@ -52,11 +52,18 @@ class Recipe
     #[ORM\OneToMany(targetEntity: Favorite::class, mappedBy: 'recipe', orphanRemoval: true)]
     private Collection $favorites;
 
+    /**
+     * @var Collection<int, Picture>
+     */
+    #[ORM\OneToMany(targetEntity: Picture::class, mappedBy: 'recipe', orphanRemoval: true, cascade: ['persist'])]
+    private Collection $pictures;
+
     public function __construct()
     {
         $this->ingredients = new ArrayCollection();
         $this->steps = new ArrayCollection();
         $this->favorites = new ArrayCollection();
+        $this->pictures = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -224,5 +231,42 @@ class Recipe
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, Picture>
+     */
+    public function getPictures(): Collection
+    {
+        return $this->pictures;
+    }
+
+    public function addPicture(Picture $picture): static
+    {
+        if (!$this->pictures->contains($picture)) {
+            $this->pictures->add($picture);
+            $picture->setRecipe($this);
+        }
+
+        return $this;
+    }
+
+    public function removePicture(Picture $picture): static
+    {
+        if ($this->pictures->removeElement($picture)) {
+            // set the owning side to null (unless already changed)
+            if ($picture->getRecipe() === $this) {
+                $picture->setRecipe(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function setTimestamps(): void
+    {
+
+        $this->created_at = new \DateTimeImmutable();
+        $this->updated_at = new \DateTimeImmutable();
     }
 }

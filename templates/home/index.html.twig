@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello HomeController!{% endblock %}
+
+{% block body %}
+
+<div class="row gap-4 w-100 justify-content-center mt-3">
+{% for recipe in recipes %}
+    <div class="card" style="width: 18rem;">
+    {% set pictures = recipe.pictures %}
+    {% set picturePrincipal = null %}
+    {% for picture in pictures %}
+    {% if picture.principalPicture %}
+      {% set picturePrincipal = picture %}
+    {% endif %}
+    {% endfor %}
+        {% if picturePrincipal %}
+          <img class="card-img-top" src="{{ asset('assets/uploads/recipes/' ~ picturePrincipal.path) }}" alt="Card image cap">
+        {% endif %}
+
+        <div class="card-body">
+            <h5 class="card-title">{{ recipe.title }}</h5>
+            <p class="card-text">{{ recipe.description }}</p>
+            <a href="{{ path('app_recipe_show', {id: recipe.id})}}" class="btn btn-primary">voir</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+
+{% endblock %}

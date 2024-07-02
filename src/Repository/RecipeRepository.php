@@ -40,4 +40,12 @@ class RecipeRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+    public function findByUserId(int $userId): array
+    {
+        return $this->createQueryBuilder('r')
+            ->andWhere('r.author = :userId')
+            ->setParameter('userId', $userId)
+            ->getQuery()
+            ->getResult();
+    }
 }

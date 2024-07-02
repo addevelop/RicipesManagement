@@ -25,6 +25,17 @@
                 <td>{{ recipe.views }}</td>
             </tr>
             <tr>
+                <th>Ingrédient</th>
+                <td>
+                    {% set ingredients = recipe.ingredients %}
+                    {% for ingredient in ingredients %}
+                        <ul>
+                            <li>{{ ingredient.name }} - quantitée {{ ingredient.quantity }}</li>
+                        </ul>
+                    {% endfor %}
+                </td>
+            </tr>
+            <tr>
                 <th>images</th>
                 <td>
                 {% set pictures = recipe.pictures %}
